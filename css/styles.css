@@ -136,3 +136,8 @@ address{font-style:normal}
   .btn-ghost-dark{margin:10px 0 0}
 }
 @media (prefers-reduced-motion:reduce){*{transition:none!important;scroll-behavior:auto!important}}
+
+/* office + mailing addresses */
+address + address{margin-top:.9rem}
+.contact-more address + p + p + h2{margin-top:1.6rem}
+.site-footer address + p{margin-top:.9rem}
