@@ -20,7 +20,8 @@ FIRM = "Platinum Law Firm"
 PHONE = "+1 437-557-0010"
 TEL = "+14375570010"
 EMAIL = "contact@platinumlawfirm.ca"
-ADDRESS = ["500-7030 Woodbine Avenue", "Markham, ON L3R 6G2", "Canada"]
+ADDRESS = ["10 Greensborough Village Circle", "Markham, ON L6E 1M4", "Canada"]
+MAILING_ADDRESS = ["500-7030 Woodbine Avenue", "Markham, ON L3R 6G2", "Canada"]
 HOURS = "Monday – Friday, 9am – 5pm"
 BOOK = "https://platinumlawfirm.cliogrow.com/book"
 WHATSAPP = "https://wa.me/14375570010"
@@ -88,7 +89,7 @@ def page(path, title, desc, body, active=""):
     full_title = f"{title} | {FIRM}" if title != FIRM else f"{FIRM} | Lawyers in Markham, Ontario"
     schema = ('{"@context":"https://schema.org","@type":"LegalService","name":"Platinum Law Firm",'
               f'"url":"{DOMAIN}/","telephone":"{TEL}","email":"{EMAIL}",'
-              '"address":{"@type":"PostalAddress","streetAddress":"500-7030 Woodbine Avenue","addressLocality":"Markham","addressRegion":"ON","postalCode":"L3R 6G2","addressCountry":"CA"},'
+              '"address":{"@type":"PostalAddress","streetAddress":"10 Greensborough Village Circle","addressLocality":"Markham","addressRegion":"ON","postalCode":"L6E 1M4","addressCountry":"CA"},'
               '"openingHours":"Mo-Fr 09:00-17:00","areaServed":"Ontario"}')
     doc = f"""<!doctype html>
 <html lang="en">
@@ -133,7 +134,8 @@ def page(path, title, desc, body, active=""):
 <footer class="site-footer"><div class="wrap footer-grid">
   <div><img src="{IMAGES['logo']}" alt="Platinum Law Firm" width="160" height="62" loading="lazy">
   <p>Our mission is to provide accessible, affordable, and professional legal services consistently to meet the needs of our clients.</p></div>
-  <div><h3>Contact</h3><address>{'<br>'.join(e(a) for a in ADDRESS)}</address>
+  <div><h3>Contact</h3><address><strong>Office</strong><br>{'<br>'.join(e(a) for a in ADDRESS)}</address>
+  <address><strong>Mailing address</strong><br>{'<br>'.join(e(a) for a in MAILING_ADDRESS)}</address>
   <p><a href="tel:{TEL}">{PHONE}</a><br><a href="mailto:{EMAIL}">{EMAIL}</a><br>{HOURS}</p></div>
   <div><h3>Practice areas</h3><ul>{''.join(f'<li><a href="/{s["slug"]}/">{s["name"]}</a></li>' for s in SERVICES)}</ul></div>
   <div><h3>Follow</h3><ul><li><a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></li><li><a href="{INSTAGRAM}" target="_blank" rel="noopener noreferrer">Instagram</a></li><li><a href="{WHATSAPP}" target="_blank" rel="noopener noreferrer">WhatsApp</a></li></ul></div>
@@ -253,7 +255,8 @@ def build():
 </div>
 <div class="wrap split contact-more">
   <div><h2>Office</h2><address>{'<br>'.join(e(a) for a in ADDRESS)}</address><p>{HOURS}</p>
-  <p><a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=500-7030+Woodbine+Avenue+Markham+ON+L3R+6G2" target="_blank" rel="noopener noreferrer">Open in Google Maps →</a></p></div>
+  <p><a class="link" href="https://www.google.com/maps/search/?api=1&amp;query=10+Greensborough+Village+Circle+Markham+ON+L6E+1M4" target="_blank" rel="noopener noreferrer">Open in Google Maps →</a></p>
+  <h2>Mailing address</h2><address>{'<br>'.join(e(a) for a in MAILING_ADDRESS)}</address></div>
   <div><h2>Book a consultation</h2><p>Have questions? Book a consultation to get the right answers.</p>
   <p class="note">If you decide to retain our firm for any file work after your consultation, credit for the consultation fee will be applied towards your file.</p>
   <p><a class="btn" href="{BOOK}" target="_blank" rel="noopener noreferrer">Book now</a></p></div>
