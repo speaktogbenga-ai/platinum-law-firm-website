@@ -78,11 +78,11 @@ def e(s): return html.escape(s, quote=True)
 def icon(slug):
     return f'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{ICONS[slug]}</svg>'
 
-# Home page background video (free Pexels clip 6100003, "African American lawyer ... with balance scales").
+# Home page background video (free Pexels clip 6101341, "Black woman lawyer in a gown reading documents in a library office").
 HERO_VIDEO = {
-    "poster": "https://images.pexels.com/videos/6100003/pexels-photo-6100003.jpeg?auto=compress&cs=tinysrgb&w=1600",
-    "small": "https://videos.pexels.com/video-files/6100003/6100003-hd_1366_720_30fps.mp4",
-    "large": "https://videos.pexels.com/video-files/6100003/6100003-hd_2048_1080_30fps.mp4",
+    "poster": "https://images.pexels.com/videos/6101341/pexels-photo-6101341.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "small": "https://videos.pexels.com/video-files/6101341/6101341-hd_1366_720_30fps.mp4",
+    "large": "https://videos.pexels.com/video-files/6101341/6101341-hd_2048_1080_30fps.mp4",
 }
 
 CSP = ("default-src 'self'; img-src 'self' data: https://images.pexels.com; media-src https://videos.pexels.com; style-src 'self' https://fonts.googleapis.com; "
