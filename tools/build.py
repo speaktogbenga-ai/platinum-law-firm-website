@@ -2,7 +2,7 @@
 """Builds the static Platinum Law Firm site into the repository root (published by GitHub Pages).
 Run:  python3 tools/build.py
 Edit the CONTENT below, then re-run. No other tools needed."""
-import os, html, pathlib
+import os, html, pathlib, hashlib
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PREVIEW = os.environ.get("PREVIEW") == "1"   # preview build: relative links that work from plain files
@@ -88,6 +88,11 @@ HERO_VIDEO = {
 CSP = ("default-src 'self'; img-src 'self' data: https://images.pexels.com; media-src https://videos.pexels.com; style-src 'self' https://fonts.googleapis.com; "
        "font-src https://fonts.gstatic.com; script-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'")
 
+def asset_version(rel):
+    """Short content hash, so browsers fetch a fresh copy whenever the file changes."""
+    src = pathlib.Path(__file__).resolve().parent.parent / rel
+    return hashlib.sha256(src.read_bytes()).hexdigest()[:10]
+
 def page(path, title, desc, body, active=""):
     depth = path.count("/")
     canonical = DOMAIN + "/" + path.replace("index.html", "")
@@ -116,7 +121,7 @@ def page(path, title, desc, body, active=""):
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@500;600&family=Poppins:wght@300;400;500;600&display=swap">
-<link rel="stylesheet" href="/css/styles.css">
+<link rel="stylesheet" href="/css/styles.css?v={asset_version('css/styles.css')}">
 <script type="application/ld+json">{schema}</script>
 </head>
 <body>
@@ -151,7 +156,7 @@ def page(path, title, desc, body, active=""):
 <p class="disclaimer">The information on this website is general information, not legal advice. Contacting us does not create a lawyer–client relationship.</p></div>
 </footer>
 <a class="wa" href="{WHATSAPP}" target="_blank" rel="noopener noreferrer" aria-label="Chat with us on WhatsApp"><svg viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M12 2a10 10 0 0 0-8.6 15.1L2 22l5-1.3A10 10 0 1 0 12 2Zm0 18.2a8.2 8.2 0 0 1-4.2-1.2l-.3-.2-3 .8.8-2.9-.2-.3A8.2 8.2 0 1 1 12 20.2Zm4.5-6.1c-.2-.1-1.5-.7-1.7-.8s-.4-.1-.6.1-.7.8-.8 1-.3.2-.5.1a6.7 6.7 0 0 1-3.3-2.9c-.3-.4.2-.4.7-1.4a.5.5 0 0 0 0-.4l-.8-1.8c-.2-.5-.4-.4-.6-.4h-.5a1 1 0 0 0-.7.3 3 3 0 0 0-.9 2.2 5.2 5.2 0 0 0 1.1 2.7 11.8 11.8 0 0 0 4.5 4c1.7.7 2.3.8 3.2.6a2.7 2.7 0 0 0 1.8-1.2 2.2 2.2 0 0 0 .1-1.3c0-.1-.2-.2-.5-.3Z"/></svg><span>Chat with us</span></a>
-<script src="/js/site.js" defer></script>
+<script src="/js/site.js?v={asset_version('js/site.js')}" defer></script>
 </body>
 </html>
 """
