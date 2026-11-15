@@ -78,7 +78,14 @@ def e(s): return html.escape(s, quote=True)
 def icon(slug):
     return f'<svg class="icon" viewBox="0 0 24 24" aria-hidden="true" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">{ICONS[slug]}</svg>'
 
-CSP = ("default-src 'self'; img-src 'self' data:; style-src 'self' https://fonts.googleapis.com; "
+# Home page background video (free Pexels clip 6100003, "African American lawyer ... with balance scales").
+HERO_VIDEO = {
+    "poster": "https://images.pexels.com/videos/6100003/pexels-photo-6100003.jpeg?auto=compress&cs=tinysrgb&w=1600",
+    "small": "https://videos.pexels.com/video-files/6100003/6100003-hd_1366_720_30fps.mp4",
+    "large": "https://videos.pexels.com/video-files/6100003/6100003-hd_2048_1080_30fps.mp4",
+}
+
+CSP = ("default-src 'self'; img-src 'self' data: https://images.pexels.com; media-src https://videos.pexels.com; style-src 'self' https://fonts.googleapis.com; "
        "font-src https://fonts.gstatic.com; script-src 'self'; frame-src 'none'; object-src 'none'; base-uri 'self'; form-action 'none'")
 
 def page(path, title, desc, body, active=""):
@@ -164,10 +171,13 @@ def relativize(doc, depth):
         return f'{attr}="{pre}{url}"'
     return re.sub(r'(href|src)="/(?!/)([^"]*)"', fix, doc)
 
-def hero(eyebrow, h1, lead, small=False, buttons=True):
+def hero(eyebrow, h1, lead, small=False, buttons=True, video=None):
     b = (f'<div class="hero-actions"><a class="btn" href="{BOOK}" target="_blank" rel="noopener noreferrer">Book a consultation</a>'
          f'<a class="btn btn-ghost" href="tel:{TEL}">Call {PHONE}</a></div>') if buttons else ""
-    return f'<section class="hero{" hero-sm" if small else ""}"><div class="wrap"><p class="eyebrow">{eyebrow}</p><h1>{h1}</h1><p class="lead">{lead}</p>{b}</div></section>'
+    bg = (f'<video class="hero-video" autoplay muted loop playsinline preload="metadata" aria-hidden="true" poster="{video["poster"].replace("&", "&amp;")}">'
+          f'<source media="(max-width: 700px)" src="{video["small"]}" type="video/mp4">'
+          f'<source src="{video["large"]}" type="video/mp4"></video><div class="hero-shade"></div>') if video else ""
+    return f'<section class="hero{" hero-sm" if small else ""}{" hero-has-video" if video else ""}">{bg}<div class="wrap"><p class="eyebrow">{eyebrow}</p><h1>{h1}</h1><p class="lead">{lead}</p>{b}</div></section>'
 
 def service_cards():
     return '<div class="cards">' + "".join(
@@ -177,7 +187,7 @@ def service_cards():
 def build():
     # Home
     body = hero("Platinum Law Firm · Markham, Ontario", "Want some legal advice?",
-                "We are a law firm serving clients across Ontario in mental health, business, real estate, wills &amp; estates, and notary services, with a commitment to excellence and professionalism.")
+                "We are a law firm serving clients across Ontario in mental health, business, real estate, wills &amp; estates, and notary services, with a commitment to excellence and professionalism.", video=HERO_VIDEO)
     body += f'<section class="section"><div class="wrap"><p class="eyebrow">Our services</p><h2>Legal practice areas</h2>{service_cards()}</div></section>'
     body += f"""<section class="section alt"><div class="wrap split">
   <img class="portrait" src="{IMAGES['titi']}" alt="Titilope Olatunji, lawyer" width="440" height="563" loading="lazy">
