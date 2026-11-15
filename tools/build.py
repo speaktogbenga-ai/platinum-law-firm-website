@@ -240,7 +240,7 @@ def build():
   <p><a href="mailto:{EMAIL}">{EMAIL}</a> · <a href="tel:{TEL}">{PHONE}</a> · <a href="{LINKEDIN}" target="_blank" rel="noopener noreferrer">LinkedIn</a></p></div>
 </div></section>
 <section class="section alt"><div class="wrap values">
-  <div><h3>Practice areas</h3><ul class="checks"><li>Commercial law</li><li>Business and corporate law</li><li>Contract law</li><li>Real estate law</li><li>Civil litigation</li></ul></div>
+  <div><h3>Practice areas</h3><ul class="checks">{''.join(f'<li><a href="/{s["slug"]}/">{s["name"]}</a></li>' for s in SERVICES)}</ul></div>
   <div><h3>Education &amp; bar admission</h3><ul class="checks"><li>Master of Laws (LL.M), University of Lagos, Nigeria</li><li>Barrister-at-Law, Nigerian Law School</li><li>Bachelor of Laws (LL.B), University of Ilorin, Nigeria</li><li>Member, Law Society of Ontario, Canada</li></ul></div>
 </div></section>"""
     page("attorney/titilope-olatunji/index.html", "Titilope Olatunji", "Titilope (Titi) Olatunji, lawyer at Platinum Law Firm and member of the Law Society of Ontario.", body, "attorney/titilope-olatunji/")
