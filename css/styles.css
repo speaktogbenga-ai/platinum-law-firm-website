@@ -151,3 +151,12 @@ address{font-style:normal}
 address + address{margin-top:.9rem}
 .contact-more address + p + p + h2{margin-top:1.6rem}
 .site-footer address + p{margin-top:.9rem}
+
+/* Scroll animations (js/motion.js). Hero text starts hidden only when motion is on;
+   if the script never runs, it shows anyway after 2.5 seconds. */
+html.motion:not(.motion-ready) .hero .wrap > *{opacity:0;animation:pl-show 0s linear 2.5s forwards}
+@keyframes pl-show{to{opacity:1}}
+.is-revealing{transition:none!important}
+.site-header{transition:box-shadow .3s ease}
+.site-header.is-scrolled{box-shadow:0 10px 24px -14px rgba(0,0,0,.55)}
+.hero-video{will-change:transform}
