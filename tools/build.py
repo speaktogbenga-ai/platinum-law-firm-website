@@ -190,7 +190,7 @@ def hero(eyebrow, h1, lead, small=False, buttons=True, video=None):
 
 def service_cards():
     return '<div class="cards">' + "".join(
-        f'<a class="card" href="/{s["slug"]}/">{icon(s["slug"])}<h3>{s["long"]}</h3><p>{e(s["summary"])}</p><span class="more">Learn more →</span></a>'
+        f'<a class="card" href="/{s["slug"]}/">{icon(s["slug"])}<h3>{s["long"]}</h3><p>{e(s["summary"])}</p><span class="more">Learn more <span class="arr" aria-hidden="true">→</span></span></a>'
         for s in SERVICES) + "</div>"
 
 def build():

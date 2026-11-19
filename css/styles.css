@@ -152,11 +152,103 @@ address + address{margin-top:.9rem}
 .contact-more address + p + p + h2{margin-top:1.6rem}
 .site-footer address + p{margin-top:.9rem}
 
-/* Scroll animations (js/motion.js). Hero text starts hidden only when motion is on;
+/* Animations (js/motion.js). Hero text starts hidden only when motion is on;
    if the script never runs, it shows anyway after 2.5 seconds. */
 html.motion:not(.motion-ready) .hero .wrap > *{opacity:0;animation:pl-show 0s linear 2.5s forwards}
 @keyframes pl-show{to{opacity:1}}
 .is-revealing{transition:none!important}
-.site-header{transition:box-shadow .3s ease}
-.site-header.is-scrolled{box-shadow:0 10px 24px -14px rgba(0,0,0,.55)}
+.hero h1 .w{display:inline-block;will-change:transform,filter}
 .hero-video{will-change:transform}
+
+/* Gold line under the hero draws out from the centre */
+.hero:after{transform-origin:50% 50%;transition:transform 1.4s cubic-bezier(.2,.7,.2,1)}
+html.motion:not(.hero-line-in) .hero:after{transform:scaleX(0)}
+
+/* Gold line above mission / vision / values draws across */
+.values > div{border-top:0;position:relative;padding-top:20px}
+.values > div:before{content:"";position:absolute;left:0;top:0;width:100%;height:2px;background:var(--gold);transform-origin:0 50%;transition:transform 1s cubic-bezier(.2,.7,.2,1)}
+html.motion .values > div:not(.is-drawn):before{transform:scaleX(0)}
+.values > div:nth-child(2):before{transition-delay:.12s}
+.values > div:nth-child(3):before{transition-delay:.24s}
+
+/* ---------- Design polish ---------- */
+/* Header: soft shadow and a slightly slimmer bar once you scroll */
+.site-header{transition:box-shadow .3s ease,background-color .3s ease}
+.site-header .wrap{transition:min-height .3s ease}
+.brand img{transition:height .3s ease}
+.site-header.is-scrolled{box-shadow:0 10px 24px -14px rgba(0,0,0,.55);background:rgba(20,22,26,.97)}
+.site-header.is-scrolled .wrap{min-height:70px}
+.site-header.is-scrolled .brand img{height:52px}
+
+/* Menu links: a thin gold underline slides in on hover and marks the current page */
+.nav a:not(.btn){position:relative;padding:6px 0}
+.nav a:not(.btn):after{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:var(--gold-2);transform:scaleX(0);transform-origin:0 50%;transition:transform .3s ease}
+.nav a:not(.btn):hover:after,.nav a[aria-current=page]:after{transform:scaleX(1)}
+.menu-btn{min-height:44px;transition:border-color .2s,color .2s}
+.menu-btn:hover{border-color:var(--gold);color:var(--gold-2)}
+
+/* Buttons: gentle lift with a warm shadow; a quick press-down when tapped */
+.btn{transition:background .25s,transform .25s,box-shadow .25s,border-color .25s}
+.btn:hover{transform:translateY(-2px);box-shadow:0 12px 24px -12px rgba(177,151,107,.75)}
+.btn:active{transform:translateY(0);box-shadow:none}
+.btn-ghost:hover,.btn-ghost-dark:hover{box-shadow:none;border-color:var(--gold-2)}
+.link{background:linear-gradient(currentColor,currentColor) 0 100%/0 1px no-repeat;transition:background-size .3s ease,color .2s}
+.link:hover{background-size:100% 1px}
+
+/* Practice-area cards: lift, gold edge, icon tint and a sliding arrow */
+.card{position:relative;overflow:hidden;transition:border-color .3s,box-shadow .3s,transform .3s}
+.card:hover{transform:translateY(-4px);box-shadow:0 22px 40px -24px rgba(20,22,26,.45)}
+.card:before{content:"";position:absolute;left:0;top:0;height:3px;width:100%;background:linear-gradient(90deg,var(--gold-dark),var(--gold-2));transform:scaleX(0);transform-origin:0 50%;transition:transform .4s ease}
+.card:hover:before,.card:focus-visible:before{transform:scaleX(1)}
+.card .icon{transition:transform .3s ease,color .3s ease}
+.card:hover .icon{transform:translateY(-2px);color:var(--gold-dark)}
+.card .arr{display:inline-block;transition:transform .3s ease}
+.card:hover .arr{transform:translateX(5px)}
+.card > *{position:relative}
+
+/* Soft gold glow that follows the mouse over cards (desktop only, js/site.js) */
+.has-glow:after{content:"";position:absolute;inset:0;pointer-events:none;opacity:0;transition:opacity .35s ease;
+  background:radial-gradient(320px circle at var(--mx,50%) var(--my,50%),rgba(177,151,107,.13),transparent 65%)}
+.has-glow:hover:after{opacity:1}
+.contact-card.has-glow:after{background:radial-gradient(260px circle at var(--mx,50%) var(--my,50%),rgba(205,182,138,.16),transparent 65%)}
+
+/* Contact cards: lift and a thin gold edge */
+.contact-card{position:relative;overflow:hidden;border:1px solid transparent;transition:transform .3s,border-color .3s,box-shadow .3s}
+.contact-card:hover{transform:translateY(-4px);border-color:rgba(205,182,138,.45);box-shadow:0 20px 36px -22px rgba(0,0,0,.6)}
+
+/* Portrait: thin gold frame offset behind the photo */
+.split > .portrait{position:relative}
+.portrait{outline:1px solid rgba(177,151,107,.55);outline-offset:10px;transition:outline-offset .9s cubic-bezier(.2,.7,.2,1),outline-color .9s}
+html.motion .portrait:not(.is-framed){outline-offset:0;outline-color:transparent}
+
+/* Practice-area side list: active page gets a gold marker */
+.aside li a{transition:background .2s,color .2s,padding-left .2s}
+.aside li a:hover{padding-left:24px}
+.aside li a[aria-current=page]{box-shadow:inset 3px 0 0 var(--gold)}
+
+/* Check-mark lists and notes read a little more comfortably */
+.checks{gap:12px}
+.note{line-height:1.65}
+
+/* WhatsApp button lifts slightly */
+.wa{transition:transform .25s ease,box-shadow .25s ease,filter .2s}
+.wa:hover{transform:translateY(-2px);box-shadow:0 16px 28px -10px rgba(0,0,0,.45)}
+
+/* Mobile menu slides down instead of popping in */
+@media (max-width:960px){
+  .nav.open{animation:pl-drop .25s ease-out}
+  .nav a:not(.btn){padding:8px 0}
+  .nav a:not(.btn):after{display:none}
+  .nav a[aria-current=page]{color:var(--gold-2)}
+}
+@keyframes pl-drop{from{opacity:0;transform:translateY(-8px)}to{opacity:1;transform:none}}
+@media (max-width:600px){
+  .portrait{outline-offset:6px}
+  .hero-actions .btn{flex:1 1 auto;text-align:center}
+}
+
+/* Visitors who ask for less motion: everything shows at once, nothing moves */
+@media (prefers-reduced-motion:reduce){
+  .card:hover,.contact-card:hover,.btn:hover,.wa:hover{transform:none}
+  .nav.open{animation:none}
+}
