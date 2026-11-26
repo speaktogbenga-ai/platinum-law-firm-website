@@ -3,6 +3,7 @@
 Run:  python3 tools/build.py
 Edit the CONTENT below, then re-run. No other tools needed."""
 import os, html, pathlib, hashlib
+import reviews_data as RV
 
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 PREVIEW = os.environ.get("PREVIEW") == "1"   # preview build: relative links that work from plain files
@@ -189,18 +190,71 @@ def service_cards():
         f'<a class="card" href="/{s["slug"]}/">{icon(s["slug"])}<h3>{s["long"]}</h3><p>{e(s["summary"])}</p><span class="more">Learn more →</span></a>'
         for s in SERVICES) + "</div>"
 
+# ---------- Google reviews (data in tools/reviews_data.py) ----------
+G_ICON = ('<svg class="g-icon" viewBox="0 0 48 48" aria-hidden="true"><path fill="#FFC107" d="M43.6 20.5H42V20H24v8h11.3C33.7 32.7 29.2 36 24 36c-6.6 0-12-5.4-12-12s5.4-12 12-12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 13 4 4 13 4 24s9 20 20 20 20-9 20-20c0-1.3-.1-2.4-.4-3.5z"/>'
+          '<path fill="#FF3D00" d="m6.3 14.7 6.6 4.8C14.7 15.1 19 12 24 12c3.1 0 5.8 1.2 7.9 3l5.7-5.7C34 6.1 29.3 4 24 4 16.3 4 9.7 8.3 6.3 14.7z"/>'
+          '<path fill="#4CAF50" d="M24 44c5.2 0 9.9-2 13.4-5.2l-6.2-5.2C29.2 35.1 26.7 36 24 36c-5.2 0-9.6-3.3-11.3-7.9l-6.5 5C9.5 39.6 16.2 44 24 44z"/>'
+          '<path fill="#1976D2" d="M43.6 20.5H42V20H24v8h11.3c-.8 2.2-2.2 4.2-4.1 5.6l6.2 5.2C37 39.2 44 34 44 24c0-1.3-.1-2.4-.4-3.5z"/></svg>')
+STAR = '<svg viewBox="0 0 20 20" aria-hidden="true"><path d="M10 1.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8L10 14.8l-5.2 2.8 1-5.8-4.3-4.1 5.9-.9z"/></svg>'
+REVIEWS_URL = "https://search.google.com/local/reviews?placeid=" + RV.PLACE_ID
+WRITE_REVIEW_URL = "https://search.google.com/local/writereview?placeid=" + RV.PLACE_ID
+
+def stars(n):
+    """Five stars; a 4.8 rating shows the last star partly filled."""
+    out = ""
+    for i in range(5):
+        fill = max(0.0, min(1.0, n - i))
+        out += f'<span class="star f{round(fill * 10) * 10}">{STAR}{STAR}</span>'
+    return f'<span class="g-stars" role="img" aria-label="{n} out of 5 stars">{out}</span>'
+
+def short_name(full):
+    parts = full.split()
+    return parts[0] if len(parts) == 1 else f"{parts[0]} {parts[-1][0].upper()}."
+
+def review_card(r):
+    paras = [p for p in r["text"].split("\n\n") if p.strip()]
+    def ps(items): return "".join(f"<p>{e(p).replace(chr(10), '<br>')}</p>" for p in items)
+    # Long reviews show the first part, with "Read more" for the rest (no JavaScript needed).
+    if len(r["text"]) > 420 and len(paras) > 1:
+        body = ps(paras[:1]) + f'<details class="review-more"><summary>Read more</summary>{ps(paras[1:])}</details>'
+    else:
+        body = ps(paras)
+    tag = f'<span class="review-card__tag">{e(r["tag"])}</span>' if r.get("tag") else ""
+    return (f'<article class="review-card"><div class="review-card__top">{stars(5)}{G_ICON}</div>'
+            f'<div class="review-card__text">{body}</div>'
+            f'<footer class="review-card__by"><span class="review-card__avatar" aria-hidden="true">{e(r["name"][0].upper())}</span>'
+            f'<span><strong>{e(short_name(r["name"]))}</strong>{tag}</span></footer></article>')
+
+def reviews_section(show=6):
+    ordered = [r for r in RV.REVIEWS if r.get("featured")] + [r for r in RV.REVIEWS if not r.get("featured")]
+    first, rest = ordered[:show], ordered[show:]
+    more = (f'<details class="reviews-all"><summary class="btn btn-ghost-dark">Show all {len(ordered)} reviews</summary>'
+            f'<div class="reviews-grid">{"".join(review_card(r) for r in rest)}</div></details>') if rest else ""
+    return f"""<section class="section alt reviews" id="reviews"><div class="wrap">
+  <div class="reviews-head">
+    <div><p class="eyebrow">Client reviews</p><h2>What our clients say</h2></div>
+    <a class="g-badge" href="{REVIEWS_URL}" target="_blank" rel="noopener noreferrer" aria-label="Rated {RV.RATING} out of 5 from {RV.COUNT} Google reviews">{G_ICON}<span class="g-badge__score">{RV.RATING:.1f}</span>{stars(RV.RATING)}<span class="g-badge__count">{RV.COUNT} Google reviews</span></a>
+  </div>
+  <div class="reviews-grid">{"".join(review_card(r) for r in first)}</div>
+  {more}
+  <div class="reviews-actions"><a class="btn" href="{REVIEWS_URL}" target="_blank" rel="noopener noreferrer">Read all {RV.COUNT} reviews on Google</a>
+  <a class="btn btn-ghost-dark" href="{WRITE_REVIEW_URL}" target="_blank" rel="noopener noreferrer">Leave a review</a></div>
+  <p class="note reviews-note">Selected reviews, copied word for word from our Google Business Profile. Rating and review count as of {RV.UPDATED}. Every matter is different, and past results do not guarantee a similar outcome.</p>
+</div></section>"""
+
 def build():
     # Home
     body = hero("Platinum Law Firm · Markham, Ontario", "Want some legal advice?",
                 "We are a law firm serving clients across Ontario in mental health, business, real estate, wills &amp; estates, and notary services, with a commitment to excellence and professionalism.", video=HERO_VIDEO)
     body += f'<section class="section"><div class="wrap"><p class="eyebrow">Our services</p><h2>Legal practice areas</h2>{service_cards()}</div></section>'
-    body += f"""<section class="section alt"><div class="wrap split">
+    body += reviews_section()
+    body += f"""<section class="section"><div class="wrap split">
   <img class="portrait" src="{IMAGES['titi']}" alt="Titilope Olatunji, lawyer" width="440" height="563" loading="lazy">
   <div><p class="eyebrow">Meet your lawyer</p><h2>Titilope (Titi) Olatunji</h2>
   <p>Titi is a member of the Law Society of Ontario with extensive experience in corporate and commercial law, civil litigation, and real estate law since her first bar admission in 2011. Her driving force is to empower individuals in realizing their aspirations, and she goes the extra mile to advocate for her clients.</p>
   <p><a class="link" href="/attorney/titilope-olatunji/">Read Titi's biography →</a></p></div>
 </div></section>
-<section class="section"><div class="wrap values">
+<section class="section alt"><div class="wrap values">
   <div><h3>Our mission</h3><p>To provide accessible, affordable, and professional legal services consistently to meet the needs of our clients.</p></div>
   <div><h3>Our vision</h3><p>To provide excellent legal services that best suit our clients' needs.</p></div>
   <div><h3>Our values</h3><p>Professionalism, integrity and excellence.</p></div>
