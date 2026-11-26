@@ -151,3 +151,45 @@ address{font-style:normal}
 address + address{margin-top:.9rem}
 .contact-more address + p + p + h2{margin-top:1.6rem}
 .site-footer address + p{margin-top:.9rem}
+
+/* Google reviews (home page) */
+.reviews-head{display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:18px 30px}
+.reviews-head h2{margin:0}
+.g-icon{width:20px;height:20px;flex:none}
+.g-stars{display:inline-flex;gap:2px}
+.g-stars .star{position:relative;display:inline-block;width:18px;height:18px}
+.g-stars .star svg{position:absolute;inset:0;width:18px;height:18px;fill:#d9d3c7}
+.g-stars .star svg+svg{fill:#f4b400;clip-path:inset(0 calc(100% - var(--fill,100%)) 0 0)}
+.star.f0{--fill:0%}.star.f10{--fill:10%}.star.f20{--fill:20%}.star.f30{--fill:30%}.star.f40{--fill:40%}.star.f50{--fill:50%}
+.star.f60{--fill:60%}.star.f70{--fill:70%}.star.f80{--fill:80%}.star.f90{--fill:90%}.star.f100{--fill:100%}
+.g-badge{display:inline-flex;align-items:center;gap:10px;background:#fff;border:1px solid var(--line);border-radius:999px;padding:10px 18px;text-decoration:none;color:var(--text);transition:border-color .2s,transform .2s}
+.g-badge:hover{border-color:var(--gold);transform:translateY(-1px);color:var(--text)}
+.g-badge__score{font:600 1.15rem/1 var(--sans);color:var(--ink)}
+.g-badge__count{font-size:.88rem;color:var(--muted)}
+.reviews-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(320px,1fr));gap:22px;margin-top:30px;align-items:start}
+.review-card{display:flex;flex-direction:column;background:#fff;border:1px solid var(--line);border-radius:var(--radius);padding:26px}
+.review-card__top{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.review-card__text{font-size:.95rem;color:var(--text);flex:1}
+.review-card__text p{margin:0 0 .8em}
+.review-more summary{cursor:pointer;color:var(--gold-dark);font-weight:500;font-size:.9rem;list-style:none;margin-bottom:.8em}
+.review-more summary::-webkit-details-marker{display:none}
+.review-more[open] summary{display:none}
+.review-card__by{display:flex;align-items:center;gap:12px;margin-top:10px;padding-top:16px;border-top:1px solid var(--line);font-size:.92rem}
+.review-card__by strong{display:block;color:var(--ink);font-weight:500}
+.review-card__avatar{display:grid;place-items:center;width:38px;height:38px;border-radius:50%;background:var(--ink);color:var(--gold-2);font:600 1.05rem/1 var(--serif);flex:none}
+.review-card__tag{display:block;font-size:.8rem;color:var(--muted)}
+.reviews-all{margin-top:26px}
+.reviews-all>summary{list-style:none;cursor:pointer;margin-left:0}
+.reviews-all>summary::-webkit-details-marker{display:none}
+.reviews-all[open]>summary{display:none}
+.reviews-all .reviews-grid{margin-top:0}
+.reviews-actions{display:flex;flex-wrap:wrap;gap:12px;margin-top:30px}
+.reviews-actions .btn-ghost-dark{margin-left:0}
+.reviews-note{font-size:.82rem;color:var(--muted);margin-top:18px;max-width:70ch}
+@media (max-width:600px){
+  .reviews-grid{grid-template-columns:1fr}
+  /* Phones: three reviews first; the rest appear with "Show all reviews" */
+  .reviews .wrap>.reviews-grid>.review-card:nth-child(n+4){display:none}
+  .reviews:has(.reviews-all[open]) .wrap>.reviews-grid>.review-card{display:flex}
+  .g-badge{flex-wrap:wrap}
+}
